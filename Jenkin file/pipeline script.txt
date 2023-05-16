@@ -47,11 +47,12 @@ pipeline {
         stage ('K8s Deploy') {
           steps {
             script {
-                withKubeConfig([credentialsId: 'K8s', serverUrl: '']) {
+                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+    // some block
+}
                 sh ('kubectl apply -f acr.yaml')
                 }
             }
         }
      }
-   }
 }
