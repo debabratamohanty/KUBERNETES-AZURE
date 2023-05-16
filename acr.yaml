@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-springboot-app
-        image: acracr2222.acracr2222.azurecr.io/hello-world:latest
+        image: acracr2222.acracr2222.azurecr.io/hello-world:latest/KUBERNETES-AZURE:#{Build.BuildId}#
         imagePullPolicy: Always
         ports:
         - containerPort: 8085
