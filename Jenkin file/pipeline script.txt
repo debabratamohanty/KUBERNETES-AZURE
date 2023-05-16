@@ -1,56 +1,51 @@
 pipeline {
     agent any
-  tools {
-        maven 'Maven3'
-    }
-    
-        environment {
-        //once you create ACR in Azure cloud, use that here
-        registryName = "acracr2222"
-        //- update your credentials ID after creating credentials for connecting to ACR
-        registryCredential = 'ACR'
-        registryUrl = 'acracr2222.azurecr.io'
-        dockerImage = ''
-    }
-    
+    tools{
+        maven"Maven3"
+         }
+         
+         environment{
+            registryName = "acracr2222"
+            registryCredential = 'ACR'
+            registryUrl = 'acracr2222.azurecr.io'
+            dockerImage = ''
+         
+                    } 
     stages {
         stage('checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/debabratamohanty/KUBERNETES-AZURE.git']])
+                  }
+                           }
             }
-        }
-        
-        stage ('Build') {
+    stage ('Build') {
         steps {
-            sh 'mvn clean install'           
-        }
-     }
-     
-    stage ('Build image') {
+        sh 'mvn clean install'   
+            }
+                     }
+            } 
+            stage ('Build image') {
         steps {
                 script {
                     dockerImage = docker.build registryName
-                }
-            }
-        }
-        
-    // Uploading Docker images into ACR
-        stage("Push image") {
+                       }
+              }
+                                   } 
+     stage("Push image") {
          steps{   
              script {
                 docker.withRegistry( "http://${registryUrl}", registryCredential ) {
                 dockerImage.push()
-                }
-            }
-        }
-    }
-        
-        stage ('Deploy to K8s') {
+                                                                                   }
+                    }
+               }
+                         }   
+     stage ('Deploy to K8s') {
           steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                sh ('kubectl apply -f acr.yaml')
+            withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+            sh ('kubectl apply -f acr.yaml')
+                                                                                                                                                                     }
                 }
-            }
-        }
-    }
-}
+                             }                                                                                                                                                     
+                                                                                                                                                                     
+                                                                                                                                                                     
